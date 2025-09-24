@@ -9,10 +9,10 @@ LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
 Gravity = autoclass('android.view.Gravity')
 TextView = autoclass('android.widget.TextView')
 Color = autoclass('android.graphics.Color')
-Build = autoclass('android.os.Build')
 Settings = autoclass('android.provider.Settings')
 Intent = autoclass('android.content.Intent')
 String = autoclass('java.lang.String')
+Build_VERSION = autoclass('android.os.Build$VERSION')
 
 class OverlayDemo(App):
     def build(self):
@@ -37,8 +37,8 @@ class OverlayDemo(App):
         textview.setTextColor(Color.WHITE)
         textview.setPadding(50, 50, 50, 50)
 
-        # Выбираем тип окна в зависимости от Android версии
-        if Build.VERSION.SDK_INT >= 26:
+        # Тип окна в зависимости от версии Android
+        if Build_VERSION.SDK_INT >= 26:
             window_type = LayoutParams.TYPE_APPLICATION_OVERLAY
         else:
             window_type = LayoutParams.TYPE_PHONE
