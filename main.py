@@ -1,6 +1,6 @@
 from kivy.app import App
 from kivy.uix.button import Button
-from jnius import autoclass, cast
+from jnius import autoclass, cast, PythonJavaClass, java_method
 
 # Android-классы
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
@@ -14,6 +14,20 @@ Intent = autoclass('android.content.Intent')
 String = autoclass('java.lang.String')
 Build_VERSION = autoclass('android.os.Build$VERSION')
 
+# Runnable для добавления view в UI-потоке
+class AddViewRunnable(PythonJavaClass):
+    __javainterfaces__ = ['java/lang/Runnable']
+
+    def __init__(self, window_manager, view, params):
+        super().__init__()
+        self.window_manager = window_manager
+        self.view = view
+        self.params = params
+
+    @java_method('()V')
+    def run(self):
+        self.window_manager.addView(self.view, self.params)
+
 class OverlayDemo(App):
     def build(self):
         return Button(text="Показать плавающее окно", on_press=self.show_overlay)
@@ -21,7 +35,7 @@ class OverlayDemo(App):
     def show_overlay(self, *args):
         activity = PythonActivity.mActivity
 
-        # Проверяем разрешение на оверлей
+        # Проверка разрешения на оверлей
         if not Settings.canDrawOverlays(activity):
             intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             activity.startActivity(intent)
@@ -43,7 +57,7 @@ class OverlayDemo(App):
         else:
             window_type = LayoutParams.TYPE_PHONE
 
-        # Настройки окна
+        # Параметры окна
         params = LayoutParams(
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT,
@@ -55,8 +69,8 @@ class OverlayDemo(App):
         params.x = 100
         params.y = 300
 
-        # Добавляем окно поверх других приложений
-        window_manager.addView(textview, params)
+        # Добавляем view через UI-поток
+        activity.runOnUiThread(AddViewRunnable(window_manager, textview, params))
 
 if __name__ == "__main__":
     OverlayDemo().run()
