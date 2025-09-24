@@ -2,13 +2,15 @@ from kivy.app import App
 from kivy.uix.button import Button
 from jnius import autoclass, cast
 
-# Классы Android
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
 Context = autoclass('android.content.Context')
 LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
 Gravity = autoclass('android.view.Gravity')
-Color = autoclass('android.graphics.Color')
 TextView = autoclass('android.widget.TextView')
+Color = autoclass('android.graphics.Color')
+Build = autoclass('android.os.Build')
+Settings = autoclass('android.provider.Settings')
+Intent = autoclass('android.content.Intent')
 
 class OverlayDemo(App):
     def build(self):
@@ -16,6 +18,13 @@ class OverlayDemo(App):
 
     def show_overlay(self, *args):
         activity = PythonActivity.mActivity
+
+        # Проверка разрешения
+        if not Settings.canDrawOverlays(activity):
+            intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            activity.startActivity(intent)
+            return
+
         window_service = activity.getSystemService(Context.WINDOW_SERVICE)
         window_manager = cast('android.view.WindowManager', window_service)
 
@@ -26,11 +35,17 @@ class OverlayDemo(App):
         textview.setTextColor(Color.WHITE)
         textview.setPadding(50, 50, 50, 50)
 
+        # Тип окна
+        if Build.VERSION.SDK_INT >= 26:
+            window_type = LayoutParams.TYPE_APPLICATION_OVERLAY
+        else:
+            window_type = LayoutParams.TYPE_PHONE
+
         # Настройки окна
         params = LayoutParams(
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT,
-            LayoutParams.TYPE_APPLICATION_OVERLAY,  # для Android 8+
+            window_type,
             LayoutParams.FLAG_NOT_FOCUSABLE,
             -3  # PixelFormat.TRANSLUCENT
         )
@@ -38,7 +53,6 @@ class OverlayDemo(App):
         params.x = 100
         params.y = 300
 
-        # Добавляем окно
         window_manager.addView(textview, params)
 
 if __name__ == "__main__":
