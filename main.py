@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.button import Button
 from jnius import autoclass, cast
 
+# Android-классы
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
 Context = autoclass('android.content.Context')
 LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
@@ -11,6 +12,7 @@ Color = autoclass('android.graphics.Color')
 Build = autoclass('android.os.Build')
 Settings = autoclass('android.provider.Settings')
 Intent = autoclass('android.content.Intent')
+String = autoclass('java.lang.String')
 
 class OverlayDemo(App):
     def build(self):
@@ -19,7 +21,7 @@ class OverlayDemo(App):
     def show_overlay(self, *args):
         activity = PythonActivity.mActivity
 
-        # Проверка разрешения
+        # Проверяем разрешение на оверлей
         if not Settings.canDrawOverlays(activity):
             intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             activity.startActivity(intent)
@@ -30,12 +32,12 @@ class OverlayDemo(App):
 
         # Создаём текстовое поле
         textview = TextView(activity)
-        textview.setText("Привет с оверлея!")
+        textview.setText(String("Привет с оверлея!"))
         textview.setBackgroundColor(Color.argb(200, 0, 0, 0))
         textview.setTextColor(Color.WHITE)
         textview.setPadding(50, 50, 50, 50)
 
-        # Тип окна
+        # Выбираем тип окна в зависимости от Android версии
         if Build.VERSION.SDK_INT >= 26:
             window_type = LayoutParams.TYPE_APPLICATION_OVERLAY
         else:
@@ -53,6 +55,7 @@ class OverlayDemo(App):
         params.x = 100
         params.y = 300
 
+        # Добавляем окно поверх других приложений
         window_manager.addView(textview, params)
 
 if __name__ == "__main__":
