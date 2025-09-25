@@ -11,20 +11,23 @@ Intent = autoclass('android.content.Intent')
 Settings = autoclass('android.provider.Settings')
 Uri = autoclass('android.net.Uri')
 Build_VERSION = autoclass('android.os.Build$VERSION')
-ComponentName = autoclass('android.content.ComponentName')
 Runnable = autoclass('java.lang.Runnable')
 Secure = autoclass('android.provider.Settings$Secure')
 
+
 class AddViewRunnable(PythonJavaClass):
     __javainterfaces__ = ['java/lang/Runnable']
+
     def __init__(self, wm, view, params):
         super().__init__()
         self.wm = wm
         self.view = view
         self.params = params
+
     @java_method('()V')
     def run(self):
         self.wm.addView(self.view, self.params)
+
 
 class OverlayApp(App):
     def build(self):
@@ -36,8 +39,10 @@ class OverlayApp(App):
 
         # 1. Проверяем overlay-разрешение
         if not Settings.canDrawOverlays(activity):
-            intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + activity.getPackageName()))
+            intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + activity.getPackageName())
+            )
             activity.startActivity(intent)
             return
 
@@ -50,13 +55,14 @@ class OverlayApp(App):
         # Всё включено → создаём плавающую кнопку
         self.create_overlay_button()
 
-def is_accessibility_enabled(self, activity):
-    service_id = activity.getPackageName() + "/.MyAccessibilityService"
-    enabled_services = Secure.getString(
-        activity.getContentResolver(),
-        Secure.ENABLED_ACCESSIBILITY_SERVICES
-    )
-    return enabled_services and service_id in enabled_services
+    def is_accessibility_enabled(self, activity):
+        # Проверка: включён ли AccessibilityService
+        service_id = activity.getPackageName() + "/.MyAccessibilityService"
+        enabled_services = Secure.getString(
+            activity.getContentResolver(),
+            Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        return enabled_services and service_id in enabled_services
 
     def create_overlay_button(self):
         activity = PythonActivity.mActivity
@@ -93,7 +99,6 @@ def is_accessibility_enabled(self, activity):
 
         activity.runOnUiThread(AddViewRunnable(wm, button, params))
 
+
 if __name__ == "__main__":
     OverlayApp().run()
-
-
