@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Max
+title = MyApp
 
 # (str) Package name
-package.name = maxcapk
+package.name = myapp
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.godhedgehog
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -454,6 +454,7 @@ warn_on_root = 1
 #    Then, invoke the command line with the "demo" profile:
 #
 #buildozer --profile demo android debug
+
 
 
 
