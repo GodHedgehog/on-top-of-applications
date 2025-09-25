@@ -13,6 +13,7 @@ Uri = autoclass('android.net.Uri')
 Build_VERSION = autoclass('android.os.Build$VERSION')
 ComponentName = autoclass('android.content.ComponentName')
 Runnable = autoclass('java.lang.Runnable')
+Secure = autoclass('android.provider.Settings$Secure')
 
 class AddViewRunnable(PythonJavaClass):
     __javainterfaces__ = ['java/lang/Runnable']
@@ -95,3 +96,4 @@ class OverlayApp(App):
 
 if __name__ == "__main__":
     OverlayApp().run()
+
