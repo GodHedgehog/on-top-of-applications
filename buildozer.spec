@@ -95,7 +95,7 @@ fullscreen = 0
 
 # (list) Permissions
 # (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
-android.permissions = SYSTEM_ALERT_WINDOW
+android.permissions = SYSTEM_ALERT_WINDOW, BIND_ACCESSIBILITY_SERVICE
 #android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
 
 # (list) features (adds uses-feature -tags to manifest)
@@ -178,7 +178,8 @@ android.ndk_api = 21
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-#android.add_src =
+android.add_src = ./service
+android.add_manifest_xml = ./service/manifest_snippet.xml
 
 # (list) Android AAR archives to add
 #android.add_aars =
@@ -453,6 +454,7 @@ warn_on_root = 1
 #    Then, invoke the command line with the "demo" profile:
 #
 #buildozer --profile demo android debug
+
 
 
 
