@@ -50,14 +50,13 @@ class OverlayApp(App):
         # Всё включено → создаём плавающую кнопку
         self.create_overlay_button()
 
-    def is_accessibility_enabled(self, activity):
-        # Проверка: включён ли AccessibilityService
-        service_id = activity.getPackageName() + "/.MyAccessibilityService"
-        enabled_services = Settings.Secure.getString(
-            activity.getContentResolver(),
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        )
-        return enabled_services and service_id in enabled_services
+def is_accessibility_enabled(self, activity):
+    service_id = activity.getPackageName() + "/.MyAccessibilityService"
+    enabled_services = Secure.getString(
+        activity.getContentResolver(),
+        Secure.ENABLED_ACCESSIBILITY_SERVICES
+    )
+    return enabled_services and service_id in enabled_services
 
     def create_overlay_button(self):
         activity = PythonActivity.mActivity
@@ -96,4 +95,5 @@ class OverlayApp(App):
 
 if __name__ == "__main__":
     OverlayApp().run()
+
 
