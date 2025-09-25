@@ -2,25 +2,42 @@ package org.test.myapp;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
+import android.content.Intent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.graphics.Path;
 import android.view.accessibility.AccessibilityEvent;
 
 public class MyAccessibilityService extends AccessibilityService {
 
+    private BroadcastReceiver receiver;
+
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-        // Можно отлавливать события (необязательно)
+    protected void onServiceConnected() {
+        // Регистрируем приёмник для Intent
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if ("MY_ACCESSIBILITY_ACTION".equals(intent.getAction())) {
+                    swipeUp();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter("MY_ACCESSIBILITY_ACTION");
+        registerReceiver(receiver, filter);
     }
 
     @Override
-    public void onInterrupt() {
-    }
+    public void onAccessibilityEvent(AccessibilityEvent event) {}
 
-    // Метод для свайпа вверх
-    public void swipeUp() {
+    @Override
+    public void onInterrupt() {}
+
+    private void swipeUp() {
         Path path = new Path();
-        path.moveTo(500, 1500); // стартовые координаты
-        path.lineTo(500, 500);  // конечные координаты
+        path.moveTo(500, 1500);
+        path.lineTo(500, 500);
 
         GestureDescription.StrokeDescription stroke =
                 new GestureDescription.StrokeDescription(path, 0, 300);
