@@ -1,4 +1,5 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:packageNames="org.test.myapp"
     android:accessibilityEventTypes="typeViewClicked|typeViewFocused"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagDefault"
