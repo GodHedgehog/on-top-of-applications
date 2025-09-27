@@ -266,7 +266,7 @@ android.add_manifest_xml = ./service/manifest_snippet.xml
 #android.wakelock = False
 
 # (list) Android application meta-data to set (key=value format)
-#android.meta_data =
+android.meta_data = android.accessibilityservice=res/xml/accessibility_service_config.xml
 
 # (list) Android library project to add (will be added in the
 # project.properties automatically.)
@@ -456,6 +456,7 @@ warn_on_root = 1
 #    Then, invoke the command line with the "demo" profile:
 #
 #buildozer --profile demo android debug
+
 
 
 
